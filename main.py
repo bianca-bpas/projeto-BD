@@ -88,4 +88,38 @@ se nao descomente e de run
 
 # conn.commit()
 
+# cursor.execute("""
+# CREATE TABLE biblioteca (
+#   id  NUMBER(10)        NOT NULL,
+#   local_estado VARCHAR2(100)   NOT NULL,
+#   local_cep VARCHAR2(9)   NOT NULL,
+#   local_numero NUMBER(5) NOT NULL,
+#   CONSTRAINT pk_biblioteca PRIMARY KEY (id)
+# );
+# """)
+
+# cursor.execute("""
+# CREATE TABLE cargo_comissionado (
+#   cargo VARCHAR2(100)  NOT NULL,
+#   gratificacao NUMBER(5, 2)   NOT NULL,
+#   CONSTRAINT pk_cargo_com PRIMARY KEY (cargo)
+# );
+# """)
+
+# bibs = [
+#     (123, "Pernambuco", "12345-678", 100),
+#     (456001, "Parauapebas", "12345-999", 87),
+#     (6097157, "Sucupira do Riachão", "98426-611", 901)
+# ]
+# cursor.executemany("INSERT INTO biblioteca (id, local_estado, local_cep, local_numero) VALUES (?, ?, ?, ?)", bibs)
+
+# coms = [
+#     ("Consultor Técnico", 1000.00),
+#     ("Gerente Comercial", 400.50)
+# ]
+
+# cursor.executemany("INSERT INTO cargo_comissionado (cargo, gratificacao) VALUES (?, ?)", coms)
+
+# conn.commit()
+
 conn.close()
