@@ -32,7 +32,7 @@ se nao descomente e de run
 # cursor.execute("""
 # CREATE TABLE socio (
 #   cpf  CHAR(11)      NOT NULL,
-#   cartao  NUMBER(16)  NOT NULL,
+#   cartao  VARCHAR2(16)  NOT NULL,
 #   CONSTRAINT pk_socio PRIMARY KEY (cpf),
 #   CONSTRAINT fk_socio_pessoa FOREIGN KEY (cpf)
 #     REFERENCES pessoa(cpf)
@@ -73,8 +73,8 @@ se nao descomente e de run
 # cursor.executemany("INSERT INTO telefone (pessoa_fk, telefone) VALUES (?, ?)", telefones)
 
 # socios = [
-#     ('22233344455', 1234567812345678),
-#     ('44455566677', 8765432187654321)
+#     ('22233344455', "1234567812345678"),
+#     ('44455566677', "8765432187654321")
 # ]
 # cursor.executemany("INSERT INTO socio (cpf, cartao) VALUES (?, ?)", socios)
 
@@ -119,6 +119,25 @@ se nao descomente e de run
 # ]
 
 # cursor.executemany("INSERT INTO cargo_comissionado (cargo, gratificacao) VALUES (?, ?)", coms)
+
+# conn.commit()
+
+# cursor.execute("""
+# CREATE TABLE livro (
+#   ISBN  VARCHAR2(13)        NOT NULL,
+#   nome VARCHAR2(100)   NOT NULL,
+#   ano NUMBER(5)   NOT NULL,
+#   CONSTRAINT pk_livro PRIMARY KEY (ISBN)
+# );
+# """)
+
+# livros = [
+#     ("9786584952003", "Moby Dick", 1851),
+#     ("9797138852114", "Senhor dos Anéis: A Sociedade do Anel", 1954),
+#     ("1750094135220", "Senhor dos Anéis: As Duas Torres", 1954),
+#     ("0965180092413", "Senhor dos Anéis: O Retorno do Rei", 1955),
+# ]
+# cursor.executemany("INSERT INTO livro (ISBN, nome, ano) VALUES (?, ?, ?)", livros)
 
 # conn.commit()
 
