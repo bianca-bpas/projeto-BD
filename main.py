@@ -6,8 +6,11 @@ cursor = conn.cursor()
 
 '''
 codigo comentado ja foi executado
+mas achei melhor deixar pra todo mundo ver se ta coerente
 se vc baixou o biblioteca.db junto (no git) nao rode de novo
 se nao descomente e de run
+
+os povoamentos colocados sao mais de exemplo dps a gente deixa mais completo
 '''
 
 # cursor.execute("""
@@ -90,9 +93,9 @@ se nao descomente e de run
 
 # cursor.execute("""
 # CREATE TABLE biblioteca (
-#   id  NUMBER(10)        NOT NULL,
+#   id  VARCHAR2(10)        NOT NULL,
 #   local_estado VARCHAR2(100)   NOT NULL,
-#   local_cep VARCHAR2(9)   NOT NULL,
+#   local_cep VARCHAR2(8)   NOT NULL,
 #   local_numero NUMBER(5) NOT NULL,
 #   CONSTRAINT pk_biblioteca PRIMARY KEY (id)
 # );
@@ -107,9 +110,9 @@ se nao descomente e de run
 # """)
 
 # bibs = [
-#     (123, "Pernambuco", "12345-678", 100),
-#     (456001, "Parauapebas", "12345-999", 87),
-#     (6097157, "Sucupira do Riachão", "98426-611", 901)
+#     ("0000000123", "Pernambuco", "12345678", 100),
+#     ("4560010000", "Parauapebas", "12345999", 87),
+#     ("6097157000", "Sucupira do Riachão", "98426611", 901)
 # ]
 # cursor.executemany("INSERT INTO biblioteca (id, local_estado, local_cep, local_numero) VALUES (?, ?, ?, ?)", bibs)
 
@@ -133,11 +136,71 @@ se nao descomente e de run
 
 # livros = [
 #     ("9786584952003", "Moby Dick", 1851),
-#     ("9797138852114", "Senhor dos Anéis: A Sociedade do Anel", 1954),
-#     ("1750094135220", "Senhor dos Anéis: As Duas Torres", 1954),
-#     ("0965180092413", "Senhor dos Anéis: O Retorno do Rei", 1955),
+#     ("9797138852114", "O Senhor dos Anéis: A Sociedade do Anel", 1954),
+#     ("1750094135220", "O Senhor dos Anéis: As Duas Torres", 1954),
+#     ("0965180092413", "O Senhor dos Anéis: O Retorno do Rei", 1955),
+#     ("1111111111111", "O Hobbit", 1937)
 # ]
 # cursor.executemany("INSERT INTO livro (ISBN, nome, ano) VALUES (?, ?, ?)", livros)
+
+# conn.commit()
+
+# cursor.execute("""
+# CREATE TABLE autor (
+#   id  VARCHAR2(12)        NOT NULL,
+#   nome VARCHAR2(100)   NOT NULL,
+#   CONSTRAINT pk_autor PRIMARY KEY (id)
+# );
+# """)
+
+# cursor.execute("""
+# CREATE TABLE colecao (
+#   id  VARCHAR2(12)        NOT NULL,
+#   nome VARCHAR2(100)   NOT NULL,
+#   CONSTRAINT pk_colecao PRIMARY KEY (id)
+# );
+# """)
+
+# autores = [
+#     ("000000000001", "Herman Melville"),
+#     ("000000000002", "J. R. R. Tolkien"),
+# ]
+# cursor.executemany("INSERT INTO autor (id, nome) VALUES (?, ?)", autores)
+
+# colecoes = [
+#     ("000000000001", "Clássicos Americanos"),
+#     ("000000000002", "Trilogia Senhor dos Anéis"),
+#     ("000000000003", "Coleção Terra Média"),
+# ]
+# cursor.executemany("INSERT INTO colecao (id, nome) VALUES (?, ?)", colecoes)
+
+# conn.commit()
+
+# cursor.execute("""
+# CREATE TABLE pertence (
+#   ISBN  VARCHAR2(13)        NOT NULL,
+#   id  VARCHAR2(12)        NOT NULL,
+#   CONSTRAINT pk_pertence PRIMARY KEY (ISBN, id),
+#   CONSTRAINT fk_livro FOREIGN KEY (ISBN)
+#     REFERENCES livro (ISBN)
+#     ON DELETE CASCADE
+#   CONSTRAINT fk_colecao FOREIGN KEY (id)
+#     REFERENCES colecao (id)
+#     ON DELETE CASCADE
+# );
+# """)
+
+# relacao_participa = [
+#     ("9786584952003", "000000000001"),
+#     ("9797138852114", "000000000002"),
+#     ("1750094135220", "000000000002"),
+#     ("0965180092413", "000000000002"),
+#     ("9797138852114", "000000000003"),
+#     ("1750094135220", "000000000003"),
+#     ("0965180092413", "000000000003"),
+#     ("1111111111111", "000000000003"),
+# ]
+# cursor.executemany("INSERT INTO pertence (ISBN, id) VALUES (?, ?)", relacao_participa)
 
 # conn.commit()
 
