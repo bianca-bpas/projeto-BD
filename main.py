@@ -204,4 +204,29 @@ os povoamentos colocados sao mais de exemplo dps a gente deixa mais completo
 
 # conn.commit()
 
+# cursor.execute("""
+# CREATE TABLE escreve (
+#   ISBN  VARCHAR2(13)        NOT NULL,
+#   id  VARCHAR2(12)        NOT NULL,
+#   CONSTRAINT pk_pertence PRIMARY KEY (ISBN, id),
+#   CONSTRAINT fk_livro FOREIGN KEY (ISBN)
+#     REFERENCES livro (ISBN)
+#     ON DELETE CASCADE
+#   CONSTRAINT fk_autor FOREIGN KEY (id)
+#     REFERENCES autor (id)
+#     ON DELETE CASCADE
+# );
+# """)
+
+# relacao_escreve = [
+#     ("9786584952003", "000000000001"),
+#     ("9797138852114", "000000000002"),
+#     ("1750094135220", "000000000002"),
+#     ("0965180092413", "000000000002"),
+#     ("1111111111111", "000000000002"),
+# ]
+# cursor.executemany("INSERT INTO escreve (ISBN, id) VALUES (?, ?)", relacao_escreve)
+
+# conn.commit()
+
 conn.close()
