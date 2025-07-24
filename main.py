@@ -47,6 +47,7 @@ os povoamentos colocados sao mais de exemplo dps a gente deixa mais completo
 # CREATE TABLE funcionario (
 #   cpf          CHAR(11)        NOT NULL,
 #   salario      NUMBER(12,2)    NOT NULL,
+#   cargo      VARCHAR(100)    NOT NULL,
 #   chefe_cpf  CHAR(11),
 #   CONSTRAINT pk_funcionario PRIMARY KEY (cpf),
 #   CONSTRAINT fk_func_pessoa FOREIGN KEY (cpf)
@@ -82,12 +83,12 @@ os povoamentos colocados sao mais de exemplo dps a gente deixa mais completo
 # cursor.executemany("INSERT INTO socio (cpf, cartao) VALUES (?, ?)", socios)
 
 # funcionarios = [
-#     ('11122233344', 4500.00, None),
-#     ('22233344455', 3800.00, '11122233344'),
-#     ('33344455566', 3200.00, '22233344455'),
-#     ('44455566677', 5000.00, '11122233344')
+#     ('11122233344', 5500.00, "Gerente", None),
+#     ('22233344455', 3800.00, "Chefe de Manutenção", '11122233344'),
+#     ('33344455566', 3200.00, "Faxineiro", '22233344455'),
+#     ('44455566677', 5000.00,  "Bibliotecário", '11122233344')
 # ]
-# cursor.executemany("INSERT INTO funcionario (cpf, salario, chefe_cpf) VALUES (?, ?, ?)", funcionarios)
+# cursor.executemany("INSERT INTO funcionario (cpf, salario, cargo, chefe_cpf) VALUES (?, ?, ?, ?)", funcionarios)
 
 # conn.commit()
 
@@ -103,9 +104,9 @@ os povoamentos colocados sao mais de exemplo dps a gente deixa mais completo
 
 # cursor.execute("""
 # CREATE TABLE cargo_comissionado (
-#   cargo VARCHAR2(100)  NOT NULL,
+#   cargo_comissionado VARCHAR2(100)  NOT NULL,
 #   gratificacao NUMBER(5, 2)   NOT NULL,
-#   CONSTRAINT pk_cargo_com PRIMARY KEY (cargo)
+#   CONSTRAINT pk_cargo_com PRIMARY KEY (cargo_comissionado)
 # );
 # """)
 
@@ -121,7 +122,7 @@ os povoamentos colocados sao mais de exemplo dps a gente deixa mais completo
 #     ("Gerente Comercial", 400.50)
 # ]
 
-# cursor.executemany("INSERT INTO cargo_comissionado (cargo, gratificacao) VALUES (?, ?)", coms)
+# cursor.executemany("INSERT INTO cargo_comissionado (cargo_comissionado, gratificacao) VALUES (?, ?)", coms)
 
 # conn.commit()
 
@@ -227,6 +228,6 @@ os povoamentos colocados sao mais de exemplo dps a gente deixa mais completo
 # ]
 # cursor.executemany("INSERT INTO escreve (ISBN, id) VALUES (?, ?)", relacao_escreve)
 
-# conn.commit()
+conn.commit()
 
 conn.close()
