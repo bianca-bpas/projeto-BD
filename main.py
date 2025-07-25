@@ -260,4 +260,25 @@ if rebooted:
 
     conn.commit()
 
+    cursor.execute("""
+        CREATE TABLE secao (
+        id_biblioteca CHAR(10) NOT NULL,
+        codigo CHAR(10) NOT NULL,
+        descricao VARCHAR2(100) NOT NULL,
+        CONSTRAINT pk_secao PRIMARY KEY (id_biblioteca, codigo),
+        CONSTRAINT fk_biblioteca FOREIGN KEY (id_biblioteca)
+            REFERENCES biblioteca (id)
+            ON DELETE CASCADE
+        );
+    """)
+
+    secao = [
+        ("0000000123", "0000000001", "Fantasia"),
+        ("0000000123", "0000000002", "Ficção Literária Americana"),
+        ("0000000123", "0000000003", "Literatura Nacional Clássica"),
+    ]
+    cursor.executemany("INSERT INTO secao (id_biblioteca, codigo, descricao) VALUES (?, ?, ?)", secao)
+
+    conn.commit()
+
 conn.close()
