@@ -281,4 +281,34 @@ if rebooted:
 
     conn.commit()
 
+    cursor.execute("""
+        CREATE TABLE exemplar (
+        id_biblioteca CHAR(10) NOT NULL,
+        codigo NUMBER(10) NOT NULL,
+        ISBN VARCHAR2(13) NOT NULL,
+        id_biblioteca_from_secao CHAR(10),
+        codigo_secao CHAR(10),
+        CONSTRAINT pk_exemplar PRIMARY KEY (id_biblioteca, codigo),
+        CONSTRAINT fk_biblioteca FOREIGN KEY (id_biblioteca)
+            REFERENCES biblioteca (id)
+            ON DELETE CASCADE,
+        CONSTRAINT fk_secao FOREIGN KEY (id_biblioteca_from_secao, codigo_secao)
+            REFERENCES secao (id_biblioteca, codigo)
+            ON DELETE CASCADE
+        );
+    """)
+
+    exemplares = [
+        ("0000000123", 1, "9786584952003", "0000000123", "0000000002"),
+        ("0000000123", 2, "9786584952003", "0000000123", "0000000002"),
+        ("4560010000", 1, "9786584952003", None, None), 
+        ("0000000123", 3, "9797138852114", "0000000123", "0000000001"),
+        ("0000000123", 4, "9797138852114", None, None),
+        ("0000000123", 5, "1750094135220", "0000000123", "0000000001"),
+        ("0000000123", 6, "0965180092413", "0000000123", "0000000001")
+    ]
+    cursor.executemany("INSERT INTO exemplar (id_biblioteca, codigo, ISBN, id_biblioteca_from_secao, codigo_secao) VALUES (?, ?, ?, ?, ?)", exemplares)
+
+    conn.commit()
+
 conn.close()
