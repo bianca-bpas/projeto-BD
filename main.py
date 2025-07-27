@@ -311,4 +311,25 @@ if rebooted:
 
     conn.commit()
 
+    cursor.execute("""
+    CREATE TABLE emprestimo (
+      id NUMBER(10) PRIMARY KEY,
+      cpf_socio CHAR(11),
+      data DATE,
+      prazo DATE,
+      id_biblioteca CHAR(10),
+      codigo_exemplar NUMBER(10),
+      FOREIGN KEY (cpf_socio) REFERENCES SOCIO(CPF),
+      FOREIGN KEY (id_biblioteca, codigo_exemplar) REFERENCES EXEMPLAR(id_biblioteca, codigo)
+    );
+    """)
+
+    emprestimos = [
+        (1, "22233344455", "2024-06-01", "2024-06-16", "0000000123", 1),
+        (2, "44455566677", "2024-06-02", "2024-06-12", "0000000123", 3)
+    ]
+    cursor.executemany("INSERT INTO EMPRESTIMO (id, cpf_socio, data, prazo, id_biblioteca, codigo_exemplar) VALUES (?, ?, ?, ?, ?, ?)", emprestimos)
+
+    conn.commit()
+
 conn.close()
