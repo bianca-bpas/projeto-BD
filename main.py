@@ -106,13 +106,6 @@ if rebooted:
     );
     """)
 
-    cursor.execute("""
-    CREATE TABLE IF NOT EXISTS  cargo_comissionado (
-    cargo_comissionado VARCHAR2(100)  NOT NULL,
-    gratificacao NUMBER(5, 2)   NOT NULL,
-    CONSTRAINT pk_cargo_com PRIMARY KEY (cargo_comissionado)
-    );
-    """)
 
     bibs = [
         ("0000000123", "Pernambuco", "12345678", 100),
@@ -121,12 +114,6 @@ if rebooted:
     ]
     cursor.executemany("INSERT INTO biblioteca (id, local_estado, local_cep, local_numero) VALUES (?, ?, ?, ?)", bibs)
 
-    coms = [
-        ("Consultor Técnico", 1000.00),
-        ("Gerente Comercial", 400.50)
-    ]
-
-    cursor.executemany("INSERT INTO cargo_comissionado (cargo_comissionado, gratificacao) VALUES (?, ?)", coms)
 
     conn.commit()
 
@@ -332,6 +319,47 @@ if rebooted:
         (2, "44455566677", "2024-06-02", "2024-06-12", "0000000123", 3)
     ]
     cursor.executemany("INSERT INTO EMPRESTIMO (id, cpf_socio, data, prazo, id_biblioteca, codigo_exemplar) VALUES (?, ?, ?, ?, ?, ?)", emprestimos)
+
+
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS  cargo_comissionado (
+    cargo_comissionado VARCHAR(63)  NOT NULL,
+    gratificacao NUMBER(5, 2)   NOT NULL,
+    descricao VARCHAR(255),
+    CONSTRAINT pk_cargo_com PRIMARY KEY (cargo_comissionado)
+    );
+    """)
+    coms = [
+        ("Assessor de business", 1000.00, "Alinha processos e integra o backbone com a lógica de negócios."),
+    ]
+
+    cursor.executemany("INSERT INTO cargo_comissionado (cargo_comissionado, gratificacao, descricao) VALUES (?, ?, ?)", coms)
+
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS trabalha(
+        data DATE NOT NULL,
+        cpf_socio CHAR(11) NOT NULL,
+        id_biblioteca CHAR(10) NOT NULL,
+        nome_cargo VARCHAR(63),
+
+        CONSTRAINT fk_trabalha_cargo
+            FOREIGN KEY(nome_cargo) REFERENCES cargo_comissionado(nome),
+        CONSTRAINT uc_nome_cargo UNIQUE(nome_cargo),
+        CONSTRAINT pk_trabalha PRIMARY KEY(data,cpf_socio,id_biblioteca),
+        CONSTRAINT fk_trabalha_cpf
+            FOREIGN KEY(cpf_socio) REFERENCES socio(cpf),
+        CONSTRAINT fk_trablha_biblioteca
+            FOREIGN KEY(id_biblioteca) REFERENCES biblioteca(id)
+    )""")
+
+    trabalha = [
+        ("2024-06-01", "22233344455", "0000000123", "Assessor de business"),
+        ("2024-06-02", "44455566677", "0000000123", None)
+    ]
+
+    cursor.executemany("INSERT INTO trabalha (data, cpf_socio, id_biblioteca, nome_cargo) VALUES (?, ?, ?, ?)", trabalha)
 
     conn.commit()
 
