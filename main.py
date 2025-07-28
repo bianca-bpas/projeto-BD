@@ -340,17 +340,17 @@ if rebooted:
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS trabalha(
         data DATE NOT NULL,
-        cpf_socio CHAR(11) NOT NULL,
+        cpf_funcionario CHAR(11) NOT NULL,
         id_biblioteca CHAR(10) NOT NULL,
         nome_cargo VARCHAR(63),
 
         CONSTRAINT fk_trabalha_cargo
             FOREIGN KEY(nome_cargo) REFERENCES cargo_comissionado(nome),
         CONSTRAINT uc_nome_cargo UNIQUE(nome_cargo),
-        CONSTRAINT pk_trabalha PRIMARY KEY(data,cpf_socio,id_biblioteca),
+        CONSTRAINT pk_trabalha PRIMARY KEY(data,cpf_funcionario,id_biblioteca),
         CONSTRAINT fk_trabalha_cpf
-            FOREIGN KEY(cpf_socio) REFERENCES socio(cpf),
-        CONSTRAINT fk_trablha_biblioteca
+            FOREIGN KEY(cpf_funcionario) REFERENCES funcionario(cpf),
+        CONSTRAINT fk_trabalha_biblioteca
             FOREIGN KEY(id_biblioteca) REFERENCES biblioteca(id)
     )""")
 
@@ -359,7 +359,7 @@ if rebooted:
         ("2024-06-02", "44455566677", "0000000123", None)
     ]
 
-    cursor.executemany("INSERT INTO trabalha (data, cpf_socio, id_biblioteca, nome_cargo) VALUES (?, ?, ?, ?)", trabalha)
+    cursor.executemany("INSERT INTO trabalha (data, cpf_funcionario, id_biblioteca, nome_cargo) VALUES (?, ?, ?, ?)", trabalha)
 
     conn.commit()
 
