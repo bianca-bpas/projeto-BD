@@ -14,7 +14,7 @@ se nao mude a variavel e de run
 os povoamentos colocados sao mais de exemplo dps a gente deixa mais completo
 '''
 
-rebooted = True
+rebooted = False
 
 if rebooted:
     cursor.execute("""
@@ -64,38 +64,6 @@ if rebooted:
     );
     """)
 
-    pessoas = [
-        ('11122233344', 'Ana Pereira'),
-        ('22233344455', 'Bruno Santos'),
-        ('33344455566', 'Carla Oliveira'),
-        ('44455566677', 'Diego Costa')
-    ]
-    cursor.executemany("INSERT INTO pessoa (cpf, nome) VALUES (?, ?)", pessoas)
-
-    telefones = [
-        ('11122233344', '(21) 98765-4321'),
-        ('11122233344', '(21) 91234-5678'),
-        ('22233344455', '(31) 99876-5432'),
-        ('33344455566', '(11) 93456-7890')
-    ]
-    cursor.executemany("INSERT INTO telefone (pessoa_fk, telefone) VALUES (?, ?)", telefones)
-
-    socios = [
-        ('22233344455', "1234567812345678"),
-        ('44455566677', "8765432187654321")
-    ]
-    cursor.executemany("INSERT INTO socio (cpf, cartao) VALUES (?, ?)", socios)
-
-    funcionarios = [
-        ('11122233344', 5500.00, "Gerente", None),
-        ('22233344455', 3800.00, "Chefe de Manutenção", '11122233344'),
-        ('33344455566', 3200.00, "Faxineiro", '22233344455'),
-        ('44455566677', 5000.00,  "Bibliotecário", '11122233344')
-    ]
-    cursor.executemany("INSERT INTO funcionario (cpf, salario, cargo, chefe_cpf) VALUES (?, ?, ?, ?)", funcionarios)
-
-    conn.commit()
-
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS  biblioteca (
     id  VARCHAR2(10)        NOT NULL,
@@ -106,17 +74,6 @@ if rebooted:
     );
     """)
 
-
-    bibs = [
-        ("0000000123", "Pernambuco", "12345678", 100),
-        ("4560010000", "Parauapebas", "12345999", 87),
-        ("6097157000", "Sucupira do Riachão", "98426611", 901)
-    ]
-    cursor.executemany("INSERT INTO biblioteca (id, local_estado, local_cep, local_numero) VALUES (?, ?, ?, ?)", bibs)
-
-
-    conn.commit()
-
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS  livro (
     ISBN  VARCHAR2(13)        NOT NULL,
@@ -125,17 +82,6 @@ if rebooted:
     CONSTRAINT pk_livro PRIMARY KEY (ISBN)
     );
     """)
-
-    livros = [
-        ("9786584952003", "Moby Dick", 1851),
-        ("9797138852114", "O Senhor dos Anéis: A Sociedade do Anel", 1954),
-        ("1750094135220", "O Senhor dos Anéis: As Duas Torres", 1954),
-        ("0965180092413", "O Senhor dos Anéis: O Retorno do Rei", 1955),
-        ("1111111111111", "O Hobbit", 1937)
-    ]
-    cursor.executemany("INSERT INTO livro (ISBN, nome, ano) VALUES (?, ?, ?)", livros)
-
-    conn.commit()
 
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS  autor (
@@ -153,21 +99,6 @@ if rebooted:
     );
     """)
 
-    autores = [
-        ("000000000001", "Herman Melville"),
-        ("000000000002", "J. R. R. Tolkien"),
-    ]
-    cursor.executemany("INSERT INTO autor (id, nome) VALUES (?, ?)", autores)
-
-    colecoes = [
-        ("000000000001", "Clássicos Americanos"),
-        ("000000000002", "Trilogia Senhor dos Anéis"),
-        ("000000000003", "Coleção Terra Média"),
-    ]
-    cursor.executemany("INSERT INTO colecao (id, nome) VALUES (?, ?)", colecoes)
-
-    conn.commit()
-
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS  pertence (
     ISBN  VARCHAR2(13)        NOT NULL,
@@ -182,20 +113,6 @@ if rebooted:
     );
     """)
 
-    relacao_participa = [
-        ("9786584952003", "000000000001"),
-        ("9797138852114", "000000000002"),
-        ("1750094135220", "000000000002"),
-        ("0965180092413", "000000000002"),
-        ("9797138852114", "000000000003"),
-        ("1750094135220", "000000000003"),
-        ("0965180092413", "000000000003"),
-        ("1111111111111", "000000000003"),
-    ]
-    cursor.executemany("INSERT INTO pertence (ISBN, id) VALUES (?, ?)", relacao_participa)
-
-    conn.commit()
-
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS  escreve (
     ISBN  VARCHAR2(13)        NOT NULL,
@@ -209,15 +126,6 @@ if rebooted:
         ON DELETE CASCADE
     );
     """)
-
-    relacao_escreve = [
-        ("9786584952003", "000000000001"),
-        ("9797138852114", "000000000002"),
-        ("1750094135220", "000000000002"),
-        ("0965180092413", "000000000002"),
-        ("1111111111111", "000000000002"),
-    ]
-    cursor.executemany("INSERT INTO escreve (ISBN, id) VALUES (?, ?)", relacao_escreve)
 
     conn.commit()
 
@@ -240,12 +148,6 @@ if rebooted:
     );
     """)
 
-    relacao_demanda = [
-        ("1111111111111", "0000000123", "33344455566", 0)
-    ]
-    cursor.executemany("INSERT INTO demanda (ISBN, id, cpf, atendido) VALUES (?, ?, ?, ?)", relacao_demanda)
-
-    conn.commit()
 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS  secao (
@@ -258,15 +160,6 @@ if rebooted:
             ON DELETE CASCADE
         );
     """)
-
-    secao = [
-        ("0000000123", "0000000001", "Fantasia"),
-        ("0000000123", "0000000002", "Ficção Literária Americana"),
-        ("0000000123", "0000000003", "Literatura Nacional Clássica"),
-    ]
-    cursor.executemany("INSERT INTO secao (id_biblioteca, codigo, descricao) VALUES (?, ?, ?)", secao)
-
-    conn.commit()
 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS  exemplar (
@@ -288,18 +181,6 @@ if rebooted:
         );
     """)
 
-    exemplares = [
-        ("0000000123", 1, "9786584952003", "0000000123", "0000000002"),
-        ("0000000123", 2, "9786584952003", "0000000123", "0000000002"),
-        ("4560010000", 1, "9786584952003", None, None), 
-        ("0000000123", 3, "9797138852114", "0000000123", "0000000001"),
-        ("0000000123", 4, "9797138852114", None, None),
-        ("0000000123", 5, "1750094135220", "0000000123", "0000000001"),
-        ("0000000123", 6, "0965180092413", "0000000123", "0000000001")
-    ]
-    cursor.executemany("INSERT INTO exemplar (id_biblioteca, codigo, ISBN, id_biblioteca_from_secao, codigo_secao) VALUES (?, ?, ?, ?, ?)", exemplares)
-
-    conn.commit()
 
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS  emprestimo (
@@ -309,17 +190,11 @@ if rebooted:
       prazo DATE,
       id_biblioteca CHAR(10),
       codigo_exemplar NUMBER(10),
+      devolvido NUMBER(1),
       CONSTRAINT fk_emprestimo_socio FOREIGN KEY (cpf_socio) REFERENCES SOCIO(CPF),
       CONSTRAINT fk_emprestimo_exemplar FOREIGN KEY (id_biblioteca, codigo_exemplar) REFERENCES EXEMPLAR(id_biblioteca, codigo)
     );
     """)
-
-    emprestimos = [
-        (1, "22233344455", "2024-06-01", "2024-06-16", "0000000123", 1),
-        (2, "44455566677", "2024-06-02", "2024-06-12", "0000000123", 3)
-    ]
-    cursor.executemany("INSERT INTO EMPRESTIMO (id, cpf_socio, data, prazo, id_biblioteca, codigo_exemplar) VALUES (?, ?, ?, ?, ?, ?)", emprestimos)
-
 
 
     cursor.execute("""
@@ -330,11 +205,6 @@ if rebooted:
     CONSTRAINT pk_cargo_com PRIMARY KEY (cargo_comissionado)
     );
     """)
-    coms = [
-        ("Assessor de business", 1000.00, "Alinha processos e integra o backbone com a lógica de negócios."),
-    ]
-
-    cursor.executemany("INSERT INTO cargo_comissionado (cargo_comissionado, gratificacao, descricao) VALUES (?, ?, ?)", coms)
 
 
     cursor.execute("""
@@ -354,13 +224,5 @@ if rebooted:
             FOREIGN KEY(id_biblioteca) REFERENCES biblioteca(id)
     )""")
 
-    trabalha = [
-        ("2024-06-01", "22233344455", "0000000123", "Assessor de business"),
-        ("2024-06-02", "44455566677", "0000000123", None)
-    ]
-
-    cursor.executemany("INSERT INTO trabalha (data, cpf_funcionario, id_biblioteca, nome_cargo) VALUES (?, ?, ?, ?)", trabalha)
-
-    conn.commit()
 
 conn.close()
