@@ -105,4 +105,25 @@ for nome in resultados:
 
 print('\n')
 
+#autores com mais livros emprestados
+query5 ="""
+SELECT A.NOME, COUNT(*)
+FROM AUTOR A, (SELECT EX.ISBN
+                FROM EMPRESTIMO E, EXEMPLAR EX
+                WHERE E.CODIGO_EXEMPLAR = EX.CODIGO) P1
+WHERE A.ID IN (SELECT ESC.ID
+                FROM ESCREVE ESC
+                WHERE ESC.ISBN = P1.ISBN)
+GROUP BY A.NOME
+ORDER BY COUNT(*) DESC;
+"""
+
+cursor.execute(query5)
+resultados = cursor.fetchall()
+
+for nome in resultados:
+    print(nome)
+
+print('\n')
+
 conn.close()
