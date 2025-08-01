@@ -9,8 +9,8 @@ query0 = """
 SELECT nome,(
     SELECT COUNT(*)
     FROM emprestimo
-    WHERE (id_biblioteca,codigo_exemplar) in (
-                SELECT id_biblioteca,codigo
+    WHERE (codigo_exemplar) in (
+                SELECT codigo
                 FROM exemplar E
                 WHERE E.ISBN = L.ISBN
                 )
@@ -29,12 +29,12 @@ print('\n')
 #juncao interna e group by
 #livros que tem demanda na bilioteca A e existem em outra (motivação: possivel transferência de livros para evitar compra)
 query1 = """
-SELECT D.id,L.nome,EX.id_biblioteca,COUNT(*)
+SELECT D.id,L.nome,EX.id_biblioteca_from_secao,COUNT(*)
 FROM demanda D
 JOIN livro L ON L.ISBN = D.ISBN
 JOIN exemplar EX ON EX.ISBN = D.ISBN
-WHERE EX.id_biblioteca != D.id AND D.atendido = 0
-GROUP BY EX.id_biblioteca,D.id,L.nome;
+WHERE EX.id_biblioteca_from_secao != D.id AND D.atendido = 0
+GROUP BY EX.id_biblioteca_from_secao,D.id,L.nome;
 """
 
 cursor.execute(query1)
@@ -81,6 +81,27 @@ resultados = cursor.fetchall()
 
 for nome in resultados:
     print(nome[0])
+
+print('\n')
+
+#nome e telefone de todos os sócios com livros atrasados
+query4 ="""
+SELECT P1.NOME, P1.TELEFONE, P2.PRAZO
+FROM 
+    (SELECT E.CPF_SOCIO, E.PRAZO
+     FROM EMPRESTIMO E
+     WHERE E.DEVOLVIDO = 0 AND E.PRAZO < '2024-07-01') P2,
+    (SELECT P.NOME, P.CPF, T.TELEFONE
+     FROM PESSOA P, TELEFONE T
+     WHERE P.CPF = T.PESSOA_FK) P1
+WHERE P1.CPF = P2.CPF_SOCIO
+"""
+
+cursor.execute(query4)
+resultados = cursor.fetchall()
+
+for nome in resultados:
+    print(nome)
 
 print('\n')
 
