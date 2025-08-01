@@ -14,7 +14,7 @@ se nao mude a variavel e de run
 os povoamentos colocados sao mais de exemplo dps a gente deixa mais completo
 '''
 
-rebooted = False
+rebooted = True
 
 if rebooted:
     cursor.execute("""
@@ -163,15 +163,11 @@ if rebooted:
 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS  exemplar (
-        id_biblioteca CHAR(10) NOT NULL,
         codigo NUMBER(10) NOT NULL,
         ISBN VARCHAR2(13) NOT NULL,
-        id_biblioteca_from_secao CHAR(10),
-        codigo_secao CHAR(10),
-        CONSTRAINT pk_exemplar PRIMARY KEY (id_biblioteca, codigo),
-        CONSTRAINT fk_biblioteca FOREIGN KEY (id_biblioteca)
-            REFERENCES biblioteca (id)
-            ON DELETE CASCADE,
+        id_biblioteca_from_secao CHAR(10) NOT NULL, 
+        codigo_secao CHAR(10) NOT NULL,
+        CONSTRAINT pk_exemplar PRIMARY KEY (codigo),
         CONSTRAINT fk_secao FOREIGN KEY (id_biblioteca_from_secao, codigo_secao)
             REFERENCES secao (id_biblioteca, codigo)
             ON DELETE CASCADE
@@ -188,11 +184,10 @@ if rebooted:
       cpf_socio CHAR(11),
       data DATE,
       prazo DATE,
-      id_biblioteca CHAR(10),
       codigo_exemplar NUMBER(10),
       devolvido NUMBER(1),
       CONSTRAINT fk_emprestimo_socio FOREIGN KEY (cpf_socio) REFERENCES SOCIO(CPF),
-      CONSTRAINT fk_emprestimo_exemplar FOREIGN KEY (id_biblioteca, codigo_exemplar) REFERENCES EXEMPLAR(id_biblioteca, codigo)
+      CONSTRAINT fk_emprestimo_exemplar FOREIGN KEY (codigo_exemplar) REFERENCES EXEMPLAR(codigo)
     );
     """)
 
