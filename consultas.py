@@ -126,4 +126,40 @@ for nome in resultados:
 
 print('\n')
 
+#funcionarios que sao socios
+query6 ="""
+SELECT P.NOME
+FROM PESSOA P, (SELECT F.CPF
+                FROM FUNCIONARIO F, SOCIO S
+                WHERE F.CPF = S.CPF) P2
+WHERE P.CPF = P2.CPF;
+"""
+
+cursor.execute(query6)
+resultados = cursor.fetchall()
+
+for nome in resultados:
+    print(nome)
+
+print('\n')
+
+#quantas coleções cada autor participa
+query7 ="""
+SELECT A.NOME, COUNT(*)
+FROM AUTOR A, (SELECT DISTINCT ESC.ID as ID_AUT, C1.ID as ID_COL
+                FROM ESCREVE ESC, (SELECT P.ISBN, P.ID 
+                                    FROM PERTENCE P) C1
+                WHERE ESC.ISBN = C1.ISBN) C2
+WHERE A.ID = C2.ID_AUT
+GROUP BY A.NOME
+"""
+
+cursor.execute(query7)
+resultados = cursor.fetchall()
+
+for nome in resultados:
+    print(nome)
+
+print('\n')
+
 conn.close()
