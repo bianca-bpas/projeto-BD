@@ -162,4 +162,22 @@ for nome in resultados:
 
 print('\n')
 
+#funcionarios que trabalharam em mais de uma filial
+query8 ="""
+SELECT P.NOME, COUNT(*)
+FROM PESSOA P, (SELECT DISTINCT T.CPF_FUNCIONARIO, T.ID_BIBLIOTECA
+                FROM TRABALHA T) P1
+WHERE P.CPF = P1.CPF_FUNCIONARIO
+GROUP BY P.NOME
+HAVING COUNT(*) >= 2
+"""
+
+cursor.execute(query8)
+resultados = cursor.fetchall()
+
+for nome in resultados:
+    print(nome)
+
+print('\n')
+
 conn.close()
