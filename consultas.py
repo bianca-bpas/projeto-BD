@@ -180,4 +180,30 @@ for nome in resultados:
 
 print('\n')
 
+#quantas vezes cada coleção foi concluída (todos os livros emprestados por uma pessoa)
+query9 ="""
+SELECT C.NOME, COUNT(*)
+FROM COLECAO C, (SELECT P2.ID, P2.CPF_SOCIO
+                FROM (SELECT P.ID, P1.CPF_SOCIO, COUNT(*) as CONT
+                    FROM PERTENCE P, (SELECT DISTINCT E.CPF_SOCIO, EX.ISBN 
+                                    FROM EMPRESTIMO E, EXEMPLAR EX
+                                    WHERE E.CODIGO_EXEMPLAR = EX.CODIGO) P1
+                    WHERE P.ISBN = P1.ISBN
+                    GROUP BY P.ID, P1.CPF_SOCIO) P2
+                WHERE CONT = (SELECT COUNT(*)
+                                FROM PERTENCE PE
+                                WHERE PE.ID = P2.ID
+                                GROUP BY PE.ID)) P3
+WHERE C.ID = P3.ID
+GROUP BY C.NOME
+"""
+
+cursor.execute(query9)
+resultados = cursor.fetchall()
+
+for nome in resultados:
+    print(nome)
+
+print('\n')
+
 conn.close()
