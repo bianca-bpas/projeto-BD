@@ -206,4 +206,23 @@ for nome in resultados:
 
 print('\n')
 
+#pessoas que nao sao socios nem funcionarios (antijoin + union)
+query10 ="""
+SELECT P.NOME
+FROM PESSOA P
+WHERE P.CPF NOT IN (
+    SELECT CPF FROM SOCIO
+    UNION
+    SELECT CPF FROM FUNCIONARIO
+);
+"""
+
+cursor.execute(query10)
+resultados = cursor.fetchall()
+
+for nome in resultados:
+    print(nome)
+
+print('\n')
+
 conn.close()
