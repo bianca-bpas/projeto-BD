@@ -95,7 +95,7 @@
     <links xmi:type="eer:RelationshipLink" xmi:id="_Ek7JEFbDEfCnb4c4RzydUQ" source="_8HLsgEdzEfC_JuOe-V1F7A" target="_ATIjwFbDEfCnb4c4RzydUQ" participation="TOTAL" cardinality="MANY"/>
     <links xmi:type="eer:RelationshipLink" xmi:id="_FaDaQFbDEfCnb4c4RzydUQ" source="_D6TDgEd0EfC_JuOe-V1F7A" target="_ATIjwFbDEfCnb4c4RzydUQ" cardinality="MANY"/>
     <links xmi:type="eer:AttributeLink" xmi:id="_GO0fEFbDEfCnb4c4RzydUQ" source="_ATIjwFbDEfCnb4c4RzydUQ" target="_gCEe4Fa8EfCl8v_MPdbT4g"/>
-    <links xmi:type="eer:RelationshipLink" xmi:id="_QEyeoFbDEfCnb4c4RzydUQ" source="_-L4jYFbCEfCnb4c4RzydUQ" target="_NGapAFbDEfCnb4c4RzydUQ" cardinality="MANY"/>
+    <links xmi:type="eer:RelationshipLink" xmi:id="_QEyeoFbDEfCnb4c4RzydUQ" source="_-L4jYFbCEfCnb4c4RzydUQ" target="_NGapAFbDEfCnb4c4RzydUQ" chosenLink="true"/>
     <links xmi:type="eer:AttributeLink" xmi:id="_vVYzwFbDEfCnb4c4RzydUQ" source="_2o7vUFbCEfCnb4c4RzydUQ" target="_utBMMFbDEfCnb4c4RzydUQ"/>
     <links xmi:type="eer:AttributeLink" xmi:id="_bbSAUFbEEfCnb4c4RzydUQ" source="_K5-moFbDEfCnb4c4RzydUQ" target="_XcKfYFbEEfCnb4c4RzydUQ"/>
     <links xmi:type="eer:AttributeLink" xmi:id="_jzgPgFbEEfCnb4c4RzydUQ" source="_K5-moFbDEfCnb4c4RzydUQ" target="_igTiQFbEEfCnb4c4RzydUQ"/>
@@ -949,12 +949,6 @@
       <styles xmi:type="notation:RoutingStyle" xmi:id="_21s8kW_HEfCsqqbsYwJBSg"/>
       <styles xmi:type="notation:FontStyle" xmi:id="_21s8km_HEfCsqqbsYwJBSg" fontName="Segoe UI"/>
       <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_21s8k2_HEfCsqqbsYwJBSg" points="[0, 0, 0, 0]$[0, 0, 0, 0]"/>
-    </edges>
-    <edges xmi:type="notation:Edge" xmi:id="_S7QSAW_IEfCsqqbsYwJBSg" type="4007" element="_S7QSAG_IEfCsqqbsYwJBSg" source="_OZ_tUG_IEfCsqqbsYwJBSg" target="_RPHBIUd3EfC_JuOe-V1F7A">
-      <styles xmi:type="notation:RoutingStyle" xmi:id="_S7QSAm_IEfCsqqbsYwJBSg"/>
-      <styles xmi:type="notation:FontStyle" xmi:id="_S7QSA2_IEfCsqqbsYwJBSg" fontName="Segoe UI"/>
-      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_S7QSBG_IEfCsqqbsYwJBSg" points="[35, -8, -67, 15]$[82, -27, -20, -4]"/>
-      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_S7UjcG_IEfCsqqbsYwJBSg" id="(0.225,0.3877551020408163)"/>
     </edges>
   </notation:Diagram>
 </xmi:XMI>
