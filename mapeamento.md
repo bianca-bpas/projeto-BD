@@ -4,13 +4,13 @@
 
 ### Empréstimo
 
-Emprestimo(<u>id</u>, prazo, data, devolvido, cpf_socio, codigo_exemplar)<br>
+Emprestimo(<u>id</u>, prazo, data, devolvido, !cpf_socio, !codigo_exemplar)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;cpf_socio → Socio(cpf)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;codigo_exemplar → Exemplar(codigo)<br>
 
 ### Exemplar
 
-Exemplar(<u>codigo</u>, edicao, isbn_livro, id_biblioteca, codigo_secao)<br>
+Exemplar(<u>codigo</u>, edicao, !isbn_livro, !id_biblioteca, !codigo_secao)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;isbn_livro → Livro(isbn)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;id_biblioteca → Biblioteca(id)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;codigo_secao → Secao(codigo)<br>
@@ -80,7 +80,7 @@ Comanda(<u>cpf_chefe, cpf_subordinado</u>)<br>
 
 ## Entidades associativas
 
-Trabalha(<u>cpf_funcionario, id_biblioteca</u>, data, cargo_comissionado)<br>
+Trabalha(<u>cpf_funcionario, id_biblioteca</u>, data, [cargo_comissionado])<br>
 &nbsp;&nbsp;&nbsp;&nbsp;cpf_funcionario → Funcionario(cpf)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;id_biblioteca → Biblioteca(id)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;cargo_comissionado → CargoComissionado(cargo)
