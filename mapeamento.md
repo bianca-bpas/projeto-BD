@@ -39,7 +39,7 @@ Colecao(<u>id</u>, !nome)
 
 Biblioteca(<u>id</u>, !local_estado, !local_cep, !local_numero)
 
-Demanda(<u>id_biblioteca, cpf_pessoa, isbn_livro</u>, data, foi_atendido)<br>
+Demanda(<u>id_biblioteca, cpf_pessoa, isbn_livro</u>, !data, foi_atendido)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;id_biblioteca → Biblioteca(id)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;cpf_pessoa → Pessoa(cpf)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;isbn_livro → Livro(isbn)<br>
