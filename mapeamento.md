@@ -17,7 +17,7 @@ Exemplar(<u>codigo</u>, edicao, !isbn_livro, !id_biblioteca, !codigo_secao)<br>
 
 ### Livro
 
-Livro(<u>isbn</u>, nome, ano)
+Livro(<u>isbn</u>, !nome, !ano)
 
 Escreve(<u>isbn_livro, id_autor</u>)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;isbn_livro → Livro(isbn)<br>
@@ -29,15 +29,15 @@ Pertence(<u>isbn_livro, id_colecao</u>)<br>
 
 ### Autor
 
-Autor(<u>id</u>, nome)
+Autor(<u>id</u>, !nome)
 
 ### Coleção
 
-Colecao(<u>id</u>, nome)
+Colecao(<u>id</u>, !nome)
 
 ### Biblioteca
 
-Biblioteca(<u>id</u>, local_estado, local_cep, local_numero)
+Biblioteca(<u>id</u>, !local_estado, !local_cep, !local_numero)
 
 Demanda(<u>id_biblioteca, cpf_pessoa, isbn_livro</u>, data, foi_atendido)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;id_biblioteca → Biblioteca(id)<br>
@@ -46,7 +46,7 @@ Demanda(<u>id_biblioteca, cpf_pessoa, isbn_livro</u>, data, foi_atendido)<br>
 
 ### Cargo Comissionado
 
-CargoComissionado(<u>cargo</u>, valor)
+Cargo_Comissionado(<u>cargo</u>, !valor)
 
 ## Entidades fracas
 
@@ -59,28 +59,25 @@ Secao(<u>id_biblioteca, codigo</u>, descricao)<br>
 
 ### Super-entidade Pessoa
 
-Pessoa(<u>cpf</u>, nome)
+Pessoa(<u>cpf</u>, !nome)
 
 Telefone(<u>cpf_pessoa, telefone</u>)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;cpf_pessoa → Pessoa(cpf)
 
 ### Sub-entidade Sócio
 
-Socio(<u>cpf</u>, cartao)<br>
+Socio(<u>cpf</u>, !cartao)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;cpf → Pessoa(cpf)
 
 ### Sub-entidade Funcionário
 
-Funcionario(<u>cpf</u>)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;cpf → Pessoa(cpf)
-
-Comanda(<u>cpf_chefe, cpf_subordinado</u>)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;cpf_chefe → Funcionario(cpf)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;cpf_subordinado → Subordinado(cpf)<br>
+Funcionario(<u>cpf</u>, cpf_chefe)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;cpf → Pessoa(cpf)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;cpf_chefe → Funcionario(cpf)
 
 ## Entidades associativas
 
-Trabalha(<u>cpf_funcionario, id_biblioteca</u>, data, [cargo_comissionado])<br>
+Trabalha(<u>cpf_funcionario, id_biblioteca</u>, !data, [cargo_comissionado])<br>
 &nbsp;&nbsp;&nbsp;&nbsp;cpf_funcionario → Funcionario(cpf)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;id_biblioteca → Biblioteca(id)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;cargo_comissionado → CargoComissionado(cargo)
