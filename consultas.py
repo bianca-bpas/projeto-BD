@@ -218,9 +218,9 @@ print()
 
 print('\n')
 
-<<<<<<< HEAD
+
 #quantas vezes cada coleção foi concluída (todos os livros emprestados por uma pessoa)
-query9 ="""
+query12 ="""
 SELECT C.NOME, COUNT(*)
 FROM COLECAO C, (SELECT P2.ID, P2.CPF_SOCIO
                 FROM (SELECT P.ID, P1.CPF_SOCIO, COUNT(*) as CONT
@@ -237,7 +237,7 @@ WHERE C.ID = P3.ID
 GROUP BY C.NOME
 """
 
-cursor.execute(query9)
+cursor.execute(query12)
 resultados = cursor.fetchall()
 
 for nome in resultados:
@@ -246,7 +246,7 @@ for nome in resultados:
 print('\n')
 
 #pessoas que nao sao socios nem funcionarios (antijoin + union)
-query10 ="""
+query13 ="""
 SELECT P.NOME
 FROM PESSOA P
 WHERE P.CPF NOT IN (
@@ -260,7 +260,7 @@ cursor.execute(query10)
 resultados = cursor.fetchall()
 
 #autor com mais livros emprestados 
-query11 ="""
+query13 ="""
 SELECT nome, total_emprestimos
 FROM (
     SELECT A.nome, COUNT(*) AS total_emprestimos
@@ -274,7 +274,7 @@ FROM (
 ) AS top_autor;
 """
 
-cursor.execute(query11)
+cursor.execute(query13)
 resultados = cursor.fetchall()
 
 for nome in resultados:
