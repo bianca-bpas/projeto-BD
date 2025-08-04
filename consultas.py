@@ -220,6 +220,24 @@ WHERE P.CPF NOT IN (
 cursor.execute(query10)
 resultados = cursor.fetchall()
 
+#autor com mais livros emprestados 
+query11 ="""
+SELECT nome, total_emprestimos
+FROM (
+    SELECT A.nome, COUNT(*) AS total_emprestimos
+    FROM emprestimo E
+    JOIN exemplar EX ON E.codigo_exemplar = EX.codigo
+    JOIN escreve ESC ON EX.ISBN = ESC.ISBN
+    JOIN autor A ON ESC.id = A.id
+    GROUP BY A.nome
+    ORDER BY total_emprestimos DESC
+    LIMIT 1
+) AS top_autor;
+"""
+
+cursor.execute(query11)
+resultados = cursor.fetchall()
+
 for nome in resultados:
     print(nome)
 
