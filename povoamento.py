@@ -43,15 +43,15 @@ socios = [
 cursor.executemany("INSERT INTO socio (cpf, cartao) VALUES (?, ?)", socios)
 
 funcionarios = [
-    ('11122233344', 5500.00, "Gerente", None),
-    ('22233344455', 3800.00, "Chefe de Manutenção", '11122233344'),
-    ('33344455566', 3200.00, "Faxineiro", '22233344455'),
-    ('44455566677', 5000.00,  "Bibliotecário", '11122233344'),
-    ('66677888999', 532.50,  "Estagiário", '44455566677'),
-    ('71400289223', 4300.70,  "Gerente", None),
-    ('71734051189', 3610.70,  "Bibliotecário", '71400289223')
+    ('11122233344', None),
+    ('22233344455', '11122233344'),
+    ('33344455566', '22233344455'),
+    ('44455566677', '11122233344'),
+    ('66677888999', '44455566677'),
+    ('71400289223', None),
+    ('71734051189', '71400289223')
 ]
-cursor.executemany("INSERT INTO funcionario (cpf, salario, cargo, chefe_cpf) VALUES (?, ?, ?, ?)", funcionarios)
+cursor.executemany("INSERT INTO funcionario (cpf, cpf_chefe) VALUES (?, ?)", funcionarios)
 
 
 bibs = [
@@ -150,14 +150,14 @@ cursor.executemany("INSERT INTO escreve (ISBN, id) VALUES (?, ?)", relacao_escre
 
 
 relacao_demanda = [
-    ("1111111111111", "0000000123", "33344455566", 0),
-    ("1111111111111", "0000000123", "35527271379", 0),
-    ("1111111111132", "4560010000", "35527271379", 0),
-    ("2221111111111", "4560010000", "35527271379", 0),
-    ("2222222211111", "0000000123", "64223118999", 0),
-    ("2222211111111", "4560010000", "44455566677", 1)
+    ("1111111111111", "0000000123", "33344455566", 0, "2024-06-01"),
+    ("1111111111111", "0000000123", "35527271379", 0, "2024-06-02"),
+    ("1111111111132", "4560010000", "35527271379", 0, "2024-06-03"),
+    ("2221111111111", "4560010000", "35527271379", 0, "2024-06-04"),
+    ("2222222211111", "0000000123", "64223118999", 0, "2024-06-05"),
+    ("2222211111111", "4560010000", "44455566677", 1, "2024-06-06")
 ]
-cursor.executemany("INSERT INTO demanda (ISBN, id, cpf, atendido) VALUES (?, ?, ?, ?)", relacao_demanda)
+cursor.executemany("INSERT INTO demanda (ISBN, id, cpf, atendido, data) VALUES (?, ?, ?, ?, ?)", relacao_demanda)
 
 secao = [
     ("0000000123", "0000000000", "Estoque"),
@@ -198,7 +198,6 @@ exemplares = [
     (22, "2222211111111", "4560010000", "0000000003"),
     (23, "9786584952003", "4560010000", "0000000002"),
 ]
-
 cursor.executemany("INSERT INTO exemplar (codigo, ISBN, id_biblioteca_from_secao, codigo_secao) VALUES (?, ?, ?, ?)", exemplares)
 
 emprestimos = [
@@ -207,36 +206,26 @@ emprestimos = [
     (3, "35527271379", "2024-03-01", "2024-03-16", 4, 1),
     (4, "35527271379", "2024-03-22", "2024-04-03", 6, 1),
     (5, "35527271379", "2024-04-12", "2024-04-27", 7, 1),
-    (6, "35527271379", "2024-04-27", "2024-05-12", 7, 1),
+    (6, "35527271379", "2024-04-27", "2024-05-12", 8, 1),
     (7, "35527271379", "2024-06-20", "2024-07-02", 4, 0),
     (8, "44455566677", "2024-01-02", "2024-01-17", 16, 0),
     (9, "55566677888", "2024-02-02", "2024-02-17", 11, 1),
     (10, "55566677888", "2024-06-30", "2024-07-14", 20, 0),
-    (11, "71400289223", "2024-05-25", "2024-05-10", 21, 1),
+    (11, "71400289223", "2024-05-25", "2024-06-10", 21, 1),
     (12, "71400289223", "2024-06-10", "2024-06-25", 21, 1),
     (13, "71400289223", "2024-06-25", "2024-07-09", 21, 0),
     (14, "22233344455", "2024-01-05", "2024-01-20", 23, 0),
     (15, "22233344455", "2024-01-05", "2024-01-20", 15, 1),
     (16, "44455566677", "2024-02-05", "2024-02-20", 22, 1),
 ]
-cursor.executemany("INSERT INTO EMPRESTIMO (id, cpf_socio, data, prazo, codigo_exemplar, devolvido) VALUES (?, ?, ?, ?, ?, ?)", emprestimos)
+cursor.executemany("INSERT INTO emprestimo (id, cpf_socio, data, prazo, codigo_exemplar, devolvido) VALUES (?, ?, ?, ?, ?, ?)", emprestimos)
 
 coms = [
-    ("Assessor de business", 1000.00, "Alinha processos e integra o backbone com a lógica de negócios."),
-    ("Consultor de Finanças", 250.00, "Consulta finanças")
+    ("Assessor de business", 1000.00),
+    ("Consultor de Finanças", 250.00)
 ]
 
-cursor.executemany("INSERT INTO cargo_comissionado (cargo_comissionado, gratificacao, descricao) VALUES (?, ?, ?)", coms)
-
-funcionarios = [
-    ('11122233344', 5500.00, "Gerente", None),
-    ('22233344455', 3800.00, "Chefe de Manutenção", '11122233344'),
-    ('33344455566', 3200.00, "Faxineiro", '22233344455'),
-    ('44455566677', 5000.00,  "Bibliotecário", '11122233344'),
-    ('66677888999', 532.50,  "Estagiário", '44455566677'),
-    ('71400289223', 4300.70,  "Gerente", None),
-    ('71734051189', 3610.70,  "Bibliotecário", '71400289223')
-]
+cursor.executemany("INSERT INTO cargo_comissionado (cargo, valor) VALUES (?, ?)", coms)
 
 trabalha = [
     ("2024-01-01", "71400289223", "4560010000", None),
@@ -250,6 +239,9 @@ trabalha = [
     ("2024-04-12", "66677888999", "0000000123", None),
 ]
 
-cursor.executemany("INSERT INTO trabalha (data, cpf_funcionario, id_biblioteca, nome_cargo) VALUES (?, ?, ?, ?)", trabalha)
+cursor.executemany("INSERT INTO trabalha (data, cpf_funcionario, id_biblioteca, cargo_comissionado) VALUES (?, ?, ?, ?)", trabalha)
 
 conn.commit()
+
+conn.close()
+

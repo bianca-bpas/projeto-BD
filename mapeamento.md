@@ -52,7 +52,7 @@ Cargo_Comissionado(<u>cargo</u>, !valor)
 
 ### Seção
 
-Secao(<u>id_biblioteca, codigo</u>, descricao)<br>
+Secao(<u>id_biblioteca, codigo</u>, !descricao)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;id_biblioteca → Biblioteca(id)
 
 ## Super/subentidades

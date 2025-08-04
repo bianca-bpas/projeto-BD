@@ -152,7 +152,7 @@ if rebooted:
         CREATE TABLE IF NOT EXISTS  secao (
         id_biblioteca CHAR(10) NOT NULL,
         codigo CHAR(10) NOT NULL,
-        descricao VARCHAR2(100),
+        descricao VARCHAR2(100) NOT NULL,
         CONSTRAINT pk_secao PRIMARY KEY (id_biblioteca, codigo),
         CONSTRAINT fk_biblioteca FOREIGN KEY (id_biblioteca)
             REFERENCES biblioteca (id)
