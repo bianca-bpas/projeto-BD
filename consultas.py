@@ -174,12 +174,51 @@ HAVING COUNT(*) >= 2
 
 cursor.execute(query8)
 resultados = cursor.fetchall()
+print()
 
+# juncao externa
+# Bibliotecas sem seção
+query9 ="""
+select id from biblioteca left join secao s on s.id_biblioteca = id where s.id_biblioteca is null;
+"""
+
+cursor.execute(query9)
+resultados = cursor.fetchall()
 for nome in resultados:
     print(nome)
+print()
+
+
+# anti join, subconsulta relacionada de tabela
+# Livros nunca emprestados
+query10 ="""
+select nome,isbn from livro l where not exists (select 1 from emprestimo where codigo_exemplar IN (select codigo from exemplar e where e.isbn = l.isbn));
+
+"""
+
+cursor.execute(query10)
+resultados = cursor.fetchall()
+for nome in resultados:
+    print(nome)
+print()
+
+
+# operacao de conjunto (union)
+# livros mais demandados ou com muitos emprestimos: livros em destaque
+query11 = """
+SELECT l.nome,'Emprestimos' as ocorrencia, count(e.codigo) AS emp FROM livro l JOIN exemplar e ON l.isbn = e.isbn GROUP BY l.nome UNION
+SELECT l1.nome,'Demandas',count(*) as emp2 from livro l1 JOIN demanda d ON d.isbn = l1.isbn GROUP BY l1.nome ORDER BY emp DESC;
+"""
+cursor.execute(query11)
+resultados = cursor.fetchall()
+for nome in resultados:
+    print(nome)
+print()
+
 
 print('\n')
 
+<<<<<<< HEAD
 #quantas vezes cada coleção foi concluída (todos os livros emprestados por uma pessoa)
 query9 ="""
 SELECT C.NOME, COUNT(*)
@@ -244,3 +283,4 @@ for nome in resultados:
 print('\n')
 
 conn.close()
+

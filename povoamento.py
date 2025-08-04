@@ -57,6 +57,7 @@ cursor.executemany("INSERT INTO funcionario (cpf, salario, cargo, chefe_cpf) VAL
 bibs = [
         ("0000000123", "Pernambuco", "12345678", 100),
         ("4560010000", "Fortaleza", "12345999", 87),
+        ("60", "Rondonia", "9999", 65)
 ]
 
 cursor.executemany("INSERT INTO biblioteca (id, local_estado, local_cep, local_numero) VALUES (?, ?, ?, ?)", bibs)
