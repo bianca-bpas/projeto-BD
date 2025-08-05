@@ -69,23 +69,8 @@ for cpf,id,isbn in resultados:
 
 print('\n')
 
-#descubra
-query3 ="""
-SELECT A.NOME
-FROM AUTOR A
-WHERE A.ID = '000000000007';
-"""
-
-cursor.execute(query3)
-resultados = cursor.fetchall()
-
-for nome in resultados:
-    print(nome[0])
-
-print('\n')
-
 #nome e telefone de todos os sócios com livros atrasados
-query4 ="""
+query3 ="""
 SELECT P1.NOME, P1.TELEFONE, P2.PRAZO
 FROM 
     (SELECT E.CPF_SOCIO, E.PRAZO
@@ -97,7 +82,7 @@ FROM
 WHERE P1.CPF = P2.CPF_SOCIO
 """
 
-cursor.execute(query4)
+cursor.execute(query3)
 resultados = cursor.fetchall()
 
 for nome in resultados:
@@ -106,7 +91,7 @@ for nome in resultados:
 print('\n')
 
 #autores com mais livros emprestados
-query5 ="""
+query4 ="""
 SELECT A.NOME, COUNT(*)
 FROM AUTOR A, (SELECT EX.ISBN
                 FROM EMPRESTIMO E, EXEMPLAR EX
@@ -118,7 +103,7 @@ GROUP BY A.NOME
 ORDER BY COUNT(*) DESC;
 """
 
-cursor.execute(query5)
+cursor.execute(query4)
 resultados = cursor.fetchall()
 
 for nome in resultados:
@@ -127,12 +112,31 @@ for nome in resultados:
 print('\n')
 
 #funcionarios que sao socios
-query6 ="""
+query5 ="""
 SELECT P.NOME
 FROM PESSOA P, (SELECT F.CPF
                 FROM FUNCIONARIO F, SOCIO S
                 WHERE F.CPF = S.CPF) P2
 WHERE P.CPF = P2.CPF;
+"""
+
+cursor.execute(query5)
+resultados = cursor.fetchall()
+
+for nome in resultados:
+    print(nome)
+
+print('\n')
+
+#quantas coleções cada autor participa
+query6 ="""
+SELECT A.NOME, COUNT(*)
+FROM AUTOR A, (SELECT DISTINCT ESC.ID as ID_AUT, C1.ID as ID_COL
+                FROM ESCREVE ESC, (SELECT P.ISBN, P.ID 
+                                    FROM PERTENCE P) C1
+                WHERE ESC.ISBN = C1.ISBN) C2
+WHERE A.ID = C2.ID_AUT
+GROUP BY A.NOME
 """
 
 cursor.execute(query6)
@@ -143,27 +147,8 @@ for nome in resultados:
 
 print('\n')
 
-#quantas coleções cada autor participa
-query7 ="""
-SELECT A.NOME, COUNT(*)
-FROM AUTOR A, (SELECT DISTINCT ESC.ID as ID_AUT, C1.ID as ID_COL
-                FROM ESCREVE ESC, (SELECT P.ISBN, P.ID 
-                                    FROM PERTENCE P) C1
-                WHERE ESC.ISBN = C1.ISBN) C2
-WHERE A.ID = C2.ID_AUT
-GROUP BY A.NOME
-"""
-
-cursor.execute(query7)
-resultados = cursor.fetchall()
-
-for nome in resultados:
-    print(nome)
-
-print('\n')
-
 #funcionarios que trabalharam em mais de uma filial
-query8 ="""
+query7 ="""
 SELECT P.NOME, COUNT(*)
 FROM PESSOA P, (SELECT DISTINCT T.CPF_FUNCIONARIO, T.ID_BIBLIOTECA
                 FROM TRABALHA T) P1
@@ -172,14 +157,28 @@ GROUP BY P.NOME
 HAVING COUNT(*) >= 2
 """
 
-cursor.execute(query8)
+cursor.execute(query7)
 resultados = cursor.fetchall()
 print()
 
 # juncao externa
 # Bibliotecas sem seção
-query9 ="""
+query8 ="""
 select id from biblioteca left join secao s on s.id_biblioteca = id where s.id_biblioteca is null;
+"""
+
+cursor.execute(query8)
+resultados = cursor.fetchall()
+for nome in resultados:
+    print(nome)
+print()
+
+
+# anti join, subconsulta relacionada de tabela
+# Livros nunca emprestados
+query9 ="""
+select nome,isbn from livro l where not exists (select 1 from emprestimo where codigo_exemplar IN (select codigo from exemplar e where e.isbn = l.isbn));
+
 """
 
 cursor.execute(query9)
@@ -189,27 +188,13 @@ for nome in resultados:
 print()
 
 
-# anti join, subconsulta relacionada de tabela
-# Livros nunca emprestados
-query10 ="""
-select nome,isbn from livro l where not exists (select 1 from emprestimo where codigo_exemplar IN (select codigo from exemplar e where e.isbn = l.isbn));
-
-"""
-
-cursor.execute(query10)
-resultados = cursor.fetchall()
-for nome in resultados:
-    print(nome)
-print()
-
-
 # operacao de conjunto (union)
 # livros mais demandados ou com muitos emprestimos: livros em destaque
-query11 = """
+query10 = """
 SELECT l.nome,'Emprestimos' as ocorrencia, count(e.codigo) AS emp FROM livro l JOIN exemplar e ON l.isbn = e.isbn GROUP BY l.nome UNION
 SELECT l1.nome,'Demandas',count(*) as emp2 from livro l1 JOIN demanda d ON d.isbn = l1.isbn GROUP BY l1.nome ORDER BY emp DESC;
 """
-cursor.execute(query11)
+cursor.execute(query10)
 resultados = cursor.fetchall()
 for nome in resultados:
     print(nome)
@@ -220,7 +205,7 @@ print('\n')
 
 
 #quantas vezes cada coleção foi concluída (todos os livros emprestados por uma pessoa)
-query12 ="""
+query11 ="""
 SELECT C.NOME, COUNT(*)
 FROM COLECAO C, (SELECT P2.ID, P2.CPF_SOCIO
                 FROM (SELECT P.ID, P1.CPF_SOCIO, COUNT(*) as CONT
@@ -237,7 +222,7 @@ WHERE C.ID = P3.ID
 GROUP BY C.NOME
 """
 
-cursor.execute(query12)
+cursor.execute(query11)
 resultados = cursor.fetchall()
 
 for nome in resultados:
@@ -246,7 +231,7 @@ for nome in resultados:
 print('\n')
 
 #pessoas que nao sao socios nem funcionarios (antijoin + union)
-query13 ="""
+query12 ="""
 SELECT P.NOME
 FROM PESSOA P
 WHERE P.CPF NOT IN (
@@ -256,7 +241,7 @@ WHERE P.CPF NOT IN (
 );
 """
 
-cursor.execute(query10)
+cursor.execute(query12)
 resultados = cursor.fetchall()
 
 #autor com mais livros emprestados 
