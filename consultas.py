@@ -22,7 +22,7 @@ cursor.execute(query0)
 resultados = cursor.fetchall()
 
 for nome,qtd in resultados:
-    print(f"{nome} - qtd demanda: {qtd}")
+    print(f"{nome} - qtd emprestimo: {qtd}")
 
 print('\n')
 
