@@ -29,12 +29,23 @@ print('\n')
 #juncao interna e group by
 #livros que tem demanda na bilioteca A e existem em outra (motivação: possivel transferência de livros para evitar compra)
 query1 = """
-SELECT D.id,L.nome,EX.id_biblioteca_from_secao,COUNT(*)
+SELECT 
+    D.id,
+    L.nome,
+    EX.id_biblioteca_from_secao,
+    COUNT(*)
 FROM demanda D
-JOIN livro L ON L.ISBN = D.ISBN
-JOIN exemplar EX ON EX.ISBN = D.ISBN
-WHERE EX.id_biblioteca_from_secao != D.id AND D.atendido = 0
-GROUP BY EX.id_biblioteca_from_secao,D.id,L.nome;
+JOIN livro L 
+    ON L.ISBN = D.ISBN
+JOIN exemplar EX 
+    ON EX.ISBN = D.ISBN
+WHERE 
+    EX.id_biblioteca_from_secao != D.id 
+    AND D.atendido = 0
+GROUP BY 
+    EX.id_biblioteca_from_secao,
+    D.id,
+    L.nome;
 """
 
 cursor.execute(query1)
@@ -48,17 +59,20 @@ print('\n')
 #semijoin
 #demandas de pessoas que são socios (motivação: priorizar pedidos de clientes)
 query2 ="""
-SELECT D.cpf,D.id,D.ISBN
+SELECT 
+    D.cpf,
+    D.id,
+    D.ISBN
 FROM demanda D
 WHERE D.cpf in (
-            SELECT P.cpf
-            FROM pessoa P
-            WHERE EXISTS (
-                    SELECT 1
-                    FROM socio S
-                    WHERE S.cpf = P.cpf
-                    )
-        );
+    SELECT P.cpf
+    FROM pessoa P
+    WHERE EXISTS (
+        SELECT 1
+        FROM socio S
+        WHERE S.cpf = P.cpf
+    )
+);
 """
 
 cursor.execute(query2)
@@ -69,30 +83,26 @@ for cpf,id,isbn in resultados:
 
 print('\n')
 
-#descubra
-query3 ="""
-SELECT A.NOME
-FROM AUTOR A
-WHERE A.ID = '000000000007';
-"""
-
-cursor.execute(query3)
-resultados = cursor.fetchall()
-
-for nome in resultados:
-    print(nome[0])
-
-print('\n')
-
 #nome e telefone de todos os sócios com livros atrasados
 query4 ="""
-SELECT P1.NOME, P1.TELEFONE, P2.PRAZO
+SELECT 
+    P1.NOME, 
+    P1.TELEFONE, 
+    P2.PRAZO
 FROM 
-    (SELECT E.CPF_SOCIO, E.PRAZO
+    (SELECT 
+        E.CPF_SOCIO, 
+        E.PRAZO
      FROM EMPRESTIMO E
-     WHERE E.DEVOLVIDO = 0 AND E.PRAZO < '2024-07-01') P2,
-    (SELECT P.NOME, P.CPF, T.TELEFONE
-     FROM PESSOA P, TELEFONE T
+     WHERE E.DEVOLVIDO = 0 
+        AND E.PRAZO < '2024-07-01') P2,
+    (SELECT 
+        P.NOME, 
+        P.CPF, 
+        T.TELEFONE
+     FROM 
+        PESSOA P, 
+        TELEFONE T
      WHERE P.CPF = T.PESSOA_FK) P1
 WHERE P1.CPF = P2.CPF_SOCIO
 """
@@ -107,13 +117,20 @@ print('\n')
 
 #autores com mais livros emprestados
 query5 ="""
-SELECT A.NOME, COUNT(*)
-FROM AUTOR A, (SELECT EX.ISBN
-                FROM EMPRESTIMO E, EXEMPLAR EX
-                WHERE E.CODIGO_EXEMPLAR = EX.CODIGO) P1
-WHERE A.ID IN (SELECT ESC.ID
-                FROM ESCREVE ESC
-                WHERE ESC.ISBN = P1.ISBN)
+SELECT 
+    A.NOME, 
+    COUNT(*)
+FROM 
+    AUTOR A, 
+    (SELECT EX.ISBN
+    FROM 
+        EMPRESTIMO E, 
+        EXEMPLAR EX
+    WHERE E.CODIGO_EXEMPLAR = EX.CODIGO) P1
+WHERE A.ID IN 
+    (SELECT ESC.ID
+    FROM ESCREVE ESC
+    WHERE ESC.ISBN = P1.ISBN)
 GROUP BY A.NOME
 ORDER BY COUNT(*) DESC;
 """
@@ -129,9 +146,13 @@ print('\n')
 #funcionarios que sao socios
 query6 ="""
 SELECT P.NOME
-FROM PESSOA P, (SELECT F.CPF
-                FROM FUNCIONARIO F, SOCIO S
-                WHERE F.CPF = S.CPF) P2
+FROM 
+    PESSOA P, 
+    (SELECT F.CPF
+    FROM 
+        FUNCIONARIO F, 
+        SOCIO S
+    WHERE F.CPF = S.CPF) P2
 WHERE P.CPF = P2.CPF;
 """
 
@@ -145,11 +166,21 @@ print('\n')
 
 #quantas coleções cada autor participa
 query7 ="""
-SELECT A.NOME, COUNT(*)
-FROM AUTOR A, (SELECT DISTINCT ESC.ID as ID_AUT, C1.ID as ID_COL
-                FROM ESCREVE ESC, (SELECT P.ISBN, P.ID 
-                                    FROM PERTENCE P) C1
-                WHERE ESC.ISBN = C1.ISBN) C2
+SELECT 
+    A.NOME, 
+    COUNT(*)
+FROM 
+    AUTOR A, 
+    (SELECT 
+        DISTINCT ESC.ID as ID_AUT, 
+        C1.ID as ID_COL
+    FROM 
+        ESCREVE ESC, 
+        (SELECT 
+            P.ISBN, 
+            P.ID 
+        FROM PERTENCE P) C1
+    WHERE ESC.ISBN = C1.ISBN) C2
 WHERE A.ID = C2.ID_AUT
 GROUP BY A.NOME
 """
@@ -164,9 +195,15 @@ print('\n')
 
 #funcionarios que trabalharam em mais de uma filial
 query8 ="""
-SELECT P.NOME, COUNT(*)
-FROM PESSOA P, (SELECT DISTINCT T.CPF_FUNCIONARIO, T.ID_BIBLIOTECA
-                FROM TRABALHA T) P1
+SELECT 
+    P.NOME, 
+    COUNT(*)
+FROM 
+    PESSOA P, 
+    (SELECT 
+        DISTINCT T.CPF_FUNCIONARIO, 
+        T.ID_BIBLIOTECA
+    FROM TRABALHA T) P1
 WHERE P.CPF = P1.CPF_FUNCIONARIO
 GROUP BY P.NOME
 HAVING COUNT(*) >= 2
@@ -179,7 +216,12 @@ print()
 # juncao externa
 # Bibliotecas sem seção
 query9 ="""
-select id from biblioteca left join secao s on s.id_biblioteca = id where s.id_biblioteca is null;
+SELECT 
+    id 
+FROM biblioteca 
+LEFT JOIN secao s 
+    ON s.id_biblioteca = id 
+WHERE s.id_biblioteca IS NULL;
 """
 
 cursor.execute(query9)
@@ -192,8 +234,18 @@ print()
 # anti join, subconsulta relacionada de tabela
 # Livros nunca emprestados
 query10 ="""
-select nome,isbn from livro l where not exists (select 1 from emprestimo where codigo_exemplar IN (select codigo from exemplar e where e.isbn = l.isbn));
-
+select 
+    nome,
+    isbn 
+from livro l 
+where not exists 
+    (select 1 
+    from emprestimo 
+    where codigo_exemplar IN 
+        (select codigo 
+        from exemplar e 
+        where e.isbn = l.isbn)
+    );
 """
 
 cursor.execute(query10)
@@ -206,8 +258,24 @@ print()
 # operacao de conjunto (union)
 # livros mais demandados ou com muitos emprestimos: livros em destaque
 query11 = """
-SELECT l.nome,'Emprestimos' as ocorrencia, count(e.codigo) AS emp FROM livro l JOIN exemplar e ON l.isbn = e.isbn GROUP BY l.nome UNION
-SELECT l1.nome,'Demandas',count(*) as emp2 from livro l1 JOIN demanda d ON d.isbn = l1.isbn GROUP BY l1.nome ORDER BY emp DESC;
+SELECT 
+    l.nome,
+    'Emprestimos' as ocorrencia,
+    count(e.codigo) AS emp 
+FROM livro l 
+JOIN exemplar e 
+    ON l.isbn = e.isbn 
+GROUP BY l.nome 
+UNION
+    SELECT 
+        l1.nome,
+        'Demandas',
+        count(*) as emp2 
+    FROM livro l1 
+    JOIN demanda d 
+        ON d.isbn = l1.isbn 
+    GROUP BY l1.nome 
+ORDER BY emp DESC;
 """
 cursor.execute(query11)
 resultados = cursor.fetchall()
@@ -221,18 +289,37 @@ print('\n')
 
 #quantas vezes cada coleção foi concluída (todos os livros emprestados por uma pessoa)
 query12 ="""
-SELECT C.NOME, COUNT(*)
-FROM COLECAO C, (SELECT P2.ID, P2.CPF_SOCIO
-                FROM (SELECT P.ID, P1.CPF_SOCIO, COUNT(*) as CONT
-                    FROM PERTENCE P, (SELECT DISTINCT E.CPF_SOCIO, EX.ISBN 
-                                    FROM EMPRESTIMO E, EXEMPLAR EX
-                                    WHERE E.CODIGO_EXEMPLAR = EX.CODIGO) P1
-                    WHERE P.ISBN = P1.ISBN
-                    GROUP BY P.ID, P1.CPF_SOCIO) P2
-                WHERE CONT = (SELECT COUNT(*)
-                                FROM PERTENCE PE
-                                WHERE PE.ID = P2.ID
-                                GROUP BY PE.ID)) P3
+SELECT 
+    C.NOME, 
+    COUNT(*)
+FROM 
+    COLECAO C, 
+    (SELECT 
+        P2.ID, 
+        P2.CPF_SOCIO
+    FROM 
+        (SELECT 
+            P.ID, 
+            P1.CPF_SOCIO, 
+            COUNT(*) as CONT
+        FROM 
+            PERTENCE P, 
+            (SELECT 
+                DISTINCT E.CPF_SOCIO, 
+                EX.ISBN 
+            FROM 
+                EMPRESTIMO E, 
+                EXEMPLAR EX
+            WHERE E.CODIGO_EXEMPLAR = EX.CODIGO) P1
+        WHERE P.ISBN = P1.ISBN
+        GROUP BY 
+            P.ID, 
+            P1.CPF_SOCIO) P2
+    WHERE CONT = 
+        (SELECT COUNT(*)
+        FROM PERTENCE PE
+        WHERE PE.ID = P2.ID
+        GROUP BY PE.ID)) P3
 WHERE C.ID = P3.ID
 GROUP BY C.NOME
 """
@@ -250,9 +337,11 @@ query13 ="""
 SELECT P.NOME
 FROM PESSOA P
 WHERE P.CPF NOT IN (
-    SELECT CPF FROM SOCIO
+    SELECT CPF 
+    FROM SOCIO
     UNION
-    SELECT CPF FROM FUNCIONARIO
+        SELECT CPF 
+        FROM FUNCIONARIO
 );
 """
 
@@ -261,13 +350,20 @@ resultados = cursor.fetchall()
 
 #autor com mais livros emprestados 
 query13 ="""
-SELECT nome, total_emprestimos
+SELECT 
+    nome, 
+    total_emprestimos
 FROM (
-    SELECT A.nome, COUNT(*) AS total_emprestimos
+    SELECT 
+        A.nome, 
+        COUNT(*) AS total_emprestimos
     FROM emprestimo E
-    JOIN exemplar EX ON E.codigo_exemplar = EX.codigo
-    JOIN escreve ESC ON EX.ISBN = ESC.ISBN
-    JOIN autor A ON ESC.id = A.id
+    JOIN exemplar EX 
+        ON E.codigo_exemplar = EX.codigo
+    JOIN escreve ESC 
+        ON EX.ISBN = ESC.ISBN
+    JOIN autor A 
+        ON ESC.id = A.id
     GROUP BY A.nome
     ORDER BY total_emprestimos DESC
     LIMIT 1
