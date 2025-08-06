@@ -373,6 +373,26 @@ FROM (
 cursor.execute(query13)
 resultados = cursor.fetchall()
 
+#Quantidade de pessoas que estão acima da média de 
+query14 ="""
+    SELECT COUNT(*) AS qtd_pessoas_acima_media
+    FROM (
+        SELECT cpf_socio, COUNT(*) AS total_emprestimos
+        FROM emprestimo
+        GROUP BY cpf_socio
+    ) AS emprestimos_por_pessoa
+    WHERE total_emprestimos > (
+        SELECT AVG(total) FROM (
+            SELECT COUNT(*) AS total
+            FROM emprestimo
+            GROUP BY cpf_socio
+        ) AS M
+    );
+"""
+cursor.execute(query14)
+resultados = cursor.fetchall()
+
+
 for nome in resultados:
     print(nome)
 
