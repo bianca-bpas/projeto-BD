@@ -256,11 +256,11 @@ print()
 
 
 # operacao de conjunto (union)
-# livros mais demandados ou com muitos emprestimos: livros em destaque
+# livros mais demandados ou com muitos exemplares: livros em destaque
 query10 = """
 SELECT 
     l.nome,
-    'Emprestimos' as ocorrencia,
+    'Exemplares' as ocorrencia,
     count(e.codigo) AS emp 
 FROM livro l 
 JOIN exemplar e 
