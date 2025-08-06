@@ -194,6 +194,7 @@ for nome in resultados:
 print('\n')
 
 #funcionarios que trabalharam em mais de uma filial
+#having e group by
 query7 ="""
 SELECT 
     P.NOME, 
@@ -288,6 +289,7 @@ print('\n')
 
 
 #quantas vezes cada coleção foi concluída (todos os livros emprestados por uma pessoa)
+#subconsulta escalar (a do CONT = ())
 query11 ="""
 SELECT 
     C.NOME, 
@@ -372,8 +374,12 @@ FROM (
 
 cursor.execute(query13)
 resultados = cursor.fetchall()
+for nome in resultados:
+    print(nome)
 
-#Quantidade de pessoas que estão acima da média de 
+print('\n')
+#Quantidade de pessoas que estão acima da média de emprestimos
+#subconsulta escalar
 query14 ="""
     SELECT COUNT(*) AS qtd_pessoas_acima_media
     FROM (
@@ -390,6 +396,30 @@ query14 ="""
     );
 """
 cursor.execute(query14)
+resultados = cursor.fetchall()
+
+
+for nome in resultados:
+    print(nome)
+
+print('\n')
+
+#autor que escreveu mais livros
+#subconsulta de linha
+query15 = """
+SELECT A.NOME
+FROM AUTOR A
+WHERE (ID, NOME) = (
+    SELECT ESC.ID, A.NOME
+    FROM ESCREVE ESC
+    JOIN AUTOR A ON A.ID = ESC.ID
+    GROUP BY ESC.ID, A.NOME
+    ORDER BY COUNT(*) DESC
+    LIMIT 1
+);
+"""
+
+cursor.execute(query15)
 resultados = cursor.fetchall()
 
 
