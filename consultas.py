@@ -3,7 +3,7 @@ import sqlite3
 conn = sqlite3.connect("biblioteca.db")
 cursor = conn.cursor()
 
-#subconsulta escalar e de tabela
+#subconsulta escalar
 #nome do livro e quantidade de emprestimos dele (motivação: analisar demanda)
 query0 = """
 SELECT nome,(
