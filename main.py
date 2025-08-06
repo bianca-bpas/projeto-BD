@@ -4,16 +4,6 @@ conn = sqlite3.connect('biblioteca.db')
 
 cursor = conn.cursor()
 
-'''
-codigo no if ja foi executado
-mas achei melhor deixar pra todo mundo ver se ta coerente
-e tbm pq é mais facil recriar quando preciso que alterar tabela
-se vc baixou o biblioteca.db junto (no git) nao rode de novo
-se nao mude a variavel e de run
-
-os povoamentos colocados sao mais de exemplo dps a gente deixa mais completo
-'''
-
 rebooted = True
 
 if rebooted:
