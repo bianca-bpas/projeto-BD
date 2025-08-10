@@ -47,24 +47,45 @@ ex1.insert_many([
 ])
 
 print("Cenário 1")
-id_livro = liv1.find_one({"titulo": "Dom Casmurro"})["_id"]
-exemplares = ex1.find({"livro_fk": id_livro})
-for e in exemplares:
-    print(f'{e["_id"]} - {e["edicao"]}')
+# id_livro = liv1.find_one({"titulo": "Dom Casmurro"})["_id"]
+# exemplares = ex1.find({"livro_fk": id_livro})
+# for e in exemplares:
+#     print(f'{e["_id"]} - {e["edicao"]}')
+
+pipeline = [
+    {"$match": {"titulo": "Dom Casmurro"}},
+    {"$lookup": {
+        "from": "exemplar_ref_livro",
+        "localField": "_id",
+        "foreignField": "livro_fk",
+        "as": "exemplares"
+    }},
+    {"$unwind": "$exemplares"},
+    {"$project": {"_id": "$exemplares._id", "edicao": "$exemplares.edicao"}}
+]
+for doc in db.livro_puro.aggregate(pipeline):
+    print(doc) 
+
 
 ex2.insert_many([
-    {"_id": 1, "livro": {"_id": "0000000001", "titulo": "Dom Casmurro", "ano": 1899}, "edicao": 1, "bib": {"_id": "00000123"}, "secao": {"_id": "0000000001", "descricao": "Literatura Nacional"}},
-    {"_id": 2, "livro": {"_id": "0000000001", "titulo": "Dom Casmurro", "ano": 1899}, "edicao": 1, "bib": {"_id": "00000123"}, "secao": {"_id": "0000000000", "descricao": "Estoque"}},
-    {"_id": 3, "livro": {"_id": "0000000001", "titulo": "Dom Casmurro", "ano": 1899}, "edicao": 2, "bib": {"_id": "00000456"}, "secao": {"_id": "0000000001", "descricao": "Literatura Nacional"}},
-    {"_id": 4, "livro": {"_id": "0000000002", "titulo": "Memórias Póstumas de Brás Cubas", "ano": 1881}, "edicao": 1, "bib": {"_id": "00000123"}, "secao": {"_id": "0000000001", "descricao": "Literatura Nacional"}}
+    {"_id": 1, "livro": {"_id": "0000000001", "titulo": "Dom Casmurro", "ano": 1899}, "edicao": 1, "secao": {"_id": ("00000123", "0000000001"), "descricao": "Literatura Nacional"}},
+    {"_id": 2, "livro": {"_id": "0000000001", "titulo": "Dom Casmurro", "ano": 1899}, "edicao": 1, "secao": {"_id": ("00000123", "0000000000"), "descricao": "Estoque"}},
+    {"_id": 3, "livro": {"_id": "0000000001", "titulo": "Dom Casmurro", "ano": 1899}, "edicao": 2, "secao": {"_id": ("00000456", "0000000001"), "descricao": "Literatura Nacional"}},
+    {"_id": 4, "livro": {"_id": "0000000002", "titulo": "Memórias Póstumas de Brás Cubas", "ano": 1881}, "edicao": 1, "secao": {"_id": ("00000123", "0000000001"), "descricao": "Literatura Nacional"}}
 ])
 
 
 print('\nCenário 2')
-id_livro = liv1.find_one({"titulo": "Dom Casmurro"})["_id"]
-exemplares = ex2.find({"livro._id": id_livro})
-for e in exemplares:
-    print(f'{e["_id"]} - {e["edicao"]}')
+# id_livro = liv1.find_one({"titulo": "Dom Casmurro"})["_id"]
+# exemplares = ex2.find({"livro._id": id_livro})
+# for e in exemplares:
+#     print(f'{e["_id"]} - {e["edicao"]}')
+pipeline_cenario2 = [
+    {"$match": {"livro.titulo": "Dom Casmurro"}},
+    {"$project": {"_id": 1, "edicao": 1}}
+]
+for doc in ex2.aggregate(pipeline_cenario2):
+    print(doc)
 
 liv3.insert_many([
     {"_id": "0000000001", "titulo": "Dom Casmurro", "ano": 1899, "exemplares": [1, 2, 3]},
@@ -79,10 +100,20 @@ ex3.insert_many([
 ])
 
 print('\nCenário 3')
-livro = liv3.find_one({"titulo": "Dom Casmurro"})
-for e in livro["exemplares"]:
-    ex = ex3.find_one({"_id": e})
-    print(f'{e} - {ex["edicao"]}')
+pipeline_cenario3 = [
+    {"$match": {"titulo": "Dom Casmurro"}},   
+    {"$unwind": "$exemplares"},                 
+    {"$lookup": {
+        "from": "exemplar_puro",               
+        "localField": "exemplares",            
+        "foreignField": "_id",
+        "as": "exemplar_doc"
+    }},
+    {"$unwind": "$exemplar_doc"},
+    {"$project": {"_id": "$exemplares", "edicao": "$exemplar_doc.edicao"}}
+]
+for doc in liv3.aggregate(pipeline_cenario3):
+    print(doc)
 
 
 liv4.insert_many([
@@ -93,8 +124,16 @@ liv4.insert_many([
 ])
 
 print('\nCenário 4')
-livro = liv4.find_one({"titulo": "Dom Casmurro"})
-for e in livro["exemplares"]:
-    print(f'{e["_id"]} - {e["edicao"]}')
+# livro = liv4.find_one({"titulo": "Dom Casmurro"})
+# for e in livro["exemplares"]:
+#     print(f'{e["_id"]} - {e["edicao"]}')
+pipeline_cenario4 = [
+    {"$match": {"titulo": "Dom Casmurro"}},   
+    {"$unwind": "$exemplares"},
+    {"$project": {"_id": "$exemplares._id", "edicao": "$exemplares.edicao"}}
+]
+for doc in liv4.aggregate(pipeline_cenario4):
+    print(doc)
+
 
 client.close()
