@@ -68,10 +68,10 @@ for doc in db.livro_puro.aggregate(pipeline):
 
 
 ex2.insert_many([
-    {"_id": 1, "livro": {"_id": "0000000001", "titulo": "Dom Casmurro", "ano": 1899}, "edicao": 1, "bib": {"_id": "00000123"}, "secao": {"_id": "0000000001", "descricao": "Literatura Nacional"}},
-    {"_id": 2, "livro": {"_id": "0000000001", "titulo": "Dom Casmurro", "ano": 1899}, "edicao": 1, "bib": {"_id": "00000123"}, "secao": {"_id": "0000000000", "descricao": "Estoque"}},
-    {"_id": 3, "livro": {"_id": "0000000001", "titulo": "Dom Casmurro", "ano": 1899}, "edicao": 2, "bib": {"_id": "00000456"}, "secao": {"_id": "0000000001", "descricao": "Literatura Nacional"}},
-    {"_id": 4, "livro": {"_id": "0000000002", "titulo": "Memórias Póstumas de Brás Cubas", "ano": 1881}, "edicao": 1, "bib": {"_id": "00000123"}, "secao": {"_id": "0000000001", "descricao": "Literatura Nacional"}}
+    {"_id": 1, "livro": {"_id": "0000000001", "titulo": "Dom Casmurro", "ano": 1899}, "edicao": 1, "bib": {"_id": "00000123"}, "secao": {"_id": ("00000123", "0000000001"), "descricao": "Literatura Nacional"}},
+    {"_id": 2, "livro": {"_id": "0000000001", "titulo": "Dom Casmurro", "ano": 1899}, "edicao": 1, "bib": {"_id": "00000123"}, "secao": {"_id": ("00000123", "0000000000"), "descricao": "Estoque"}},
+    {"_id": 3, "livro": {"_id": "0000000001", "titulo": "Dom Casmurro", "ano": 1899}, "edicao": 2, "bib": {"_id": "00000456"}, "secao": {"_id": ("00000456", "0000000001"), "descricao": "Literatura Nacional"}},
+    {"_id": 4, "livro": {"_id": "0000000002", "titulo": "Memórias Póstumas de Brás Cubas", "ano": 1881}, "edicao": 1, "bib": {"_id": "00000123"}, "secao": {"_id": ("00000123", "0000000001"), "descricao": "Literatura Nacional"}}
 ])
 
 
