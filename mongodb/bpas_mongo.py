@@ -90,6 +90,17 @@ pipeline_1 = [
 for r in emprestimo_doc_ref_doc.aggregate(pipeline_1):
     print(f"Nome: {r['nome']}, CPF: {r['cpf_socio']}, Devolvido: {r['devolvido']}")
 
+''' equivalente SQL
+SELECT
+    e.cpf_socio,
+    s.nome,
+    e.devolvido
+FROM emprestimo e
+INNER JOIN socio s
+    ON e.cpf_socio = s.cpf
+WHERE e.devolvido = False
+'''
+
 # Cenário 2 - documento embutindo apenas um documento
 print("\nCenário 2")
 socio_doc = {"cpf": "22233344456", "nome": "Carlos", "cartao": "0000006"}
@@ -105,6 +116,15 @@ for r in emprestimo_doc_embbed_doc.find(
     {"_id": 0, "socio": 1, "devolvido": 1}
 ):
     print(f"Nome: {r['socio']['nome']}, CPF: {r['socio']['cpf']}, Devolvido: {r['devolvido']}")
+
+''' equivalente SQL
+SELECT
+    e.nome,
+    e.cpf,
+    e.devolvido
+FROM emprestimo e
+WHERE e.devolvido = False
+'''
 
 # Cenário 3 - documento com um array de referências para documentos
 print("\nCenário 3")
@@ -129,7 +149,6 @@ e2 = emprestimo_doc_array_ref_doc.insert_one({
 socio_doc_array_ref_doc.update_one({"cpf": socio_cpf}, {"$set": {"emprestimos_refs": [e1, e2]}})
 
 pipeline_3 = [
-    {"$match": {"cpf": socio_cpf}},
     {"$lookup": {
         "from": "emprestimo_doc_array_ref_doc",
         "let": {"refs": "$emprestimos_refs"},
@@ -152,6 +171,17 @@ pipeline_3 = [
 for r in socio_doc_array_ref_doc.aggregate(pipeline_3):
     print(f"Nome: {r['nome']}, CPF: {r['cpf']}, Devolvido: {r['devolvido']}")
 
+''' equivalente SQL
+SELECT
+    s.nome,
+    s.cpf,
+    e.devolvido
+FROM socio s
+INNER JOIN emprestimo e
+    ON e.id IN (s.emprestimos_refs)
+WHERE e.devolvido = False
+'''
+
 # Cenário 4 - documento embutindo vários documentos
 print("\nCenário 4")
 socio_cpf = "54455566677"
@@ -165,9 +195,24 @@ socio_doc_embbed_mult_docs.replace_one({"cpf": socio_cpf}, {
     ]
 }, upsert=True)
 
-doc = socio_doc_embbed_mult_docs.find_one({"cpf": socio_cpf}, {"_id": 0})
-for emp in doc.get("emprestimos", []):
-    if not emp["devolvido"]:
-        print(f"Nome: {doc['nome']}, CPF: {doc['cpf']}, Devolvido: {emp['devolvido']}")
+pipeline = [
+    {"$unwind": "$emprestimos"},
+    {"$match": {"emprestimos.devolvido": False}},
+    {"$project": {"_id": 0, "nome": 1, "cpf": 1, "devolvido": "$emprestimos.devolvido"}}
+]
+
+for r in socio_doc_embbed_mult_docs.aggregate(pipeline):
+    print(f"Nome: {r['nome']}, CPF: {r['cpf']}, Devolvido: {r['devolvido']}")
+
+''' equivalente SQL
+SELECT
+    s.nome,
+    s.cpf,
+    e.devolvido
+FROM socio s
+INNER JOIN emprestimo e
+    ON s.cpf = e.socio_cpf
+WHERE e.devolvido = False
+'''
 
 client.close()
