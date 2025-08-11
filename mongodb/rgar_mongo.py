@@ -36,6 +36,12 @@ db.emprestimo1.insert_many([
 ])
 
 print("Cenário 1")
+ids_exemplares = [doc["_id"] for doc in db.exemplar1.find(
+    {"ISBN": "1111111111111"}
+)]
+for emp in db.emprestimo1.find({"codigo_exemplar": {"$in": ids_exemplares}}):
+    print(emp["_id"])
+
 pipeline1 = [
     {"$match": {"ISBN": "1111111111111"}},
     {"$lookup": {
@@ -84,6 +90,11 @@ db.exemplar3.insert_many([
 ])
 
 print("\nCenário 3")
+
+for ex in db.exemplar3.find({"ISBN": "1111111111111"}, {"emprestimos": 1, "_id": 0}):
+    for id_emp in ex["emprestimos"]:
+        print(id_emp)
+
 pipeline3 = [
     {"$match": {"ISBN": "1111111111111"}},
     {"$unwind": "$emprestimos"},
