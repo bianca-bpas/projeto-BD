@@ -123,7 +123,7 @@ res = secao_ref_doc.aggregate([
     {
         "$lookup": {
             "from": "exemplar_ref_doc",
-            "localField": "exemplares",   
+        "localField": "exemplares",   
             "foreignField": "_COD",
             "as": "detalhes_exemplares"
         }
