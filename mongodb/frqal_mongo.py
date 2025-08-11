@@ -20,7 +20,7 @@ print("Conexão estabelecida com o banco de dados 'biblioteca'." + "\n")
 
 # Cenário 1 : um documento referenciando apenas um documento
 secao_ref_doc = db.colecao_ref_doc    
-exemplar_ref_doc = db.exemplar_ref_doc  # Corrigido o nome para o que será usado no $lookup
+exemplar_ref_doc = db.exemplar_ref_doc  
 secao_ref_doc.drop()
 exemplar_ref_doc.drop()
 
@@ -44,17 +44,17 @@ exemplar = (
 exemplar_ref_doc.insert_many([{"_COD": b["_COD"], "FK_COD": b["FK_COD"], "edicao": b["edicao"]} for b in exemplar])
 
 # Consulta - buscar exemplares de 'Clássicos Brasileiros'
-res1 = secao_ref_doc.aggregate([
+res1 = secao_ref_doc.aggregate([ #from
     {
-        "$lookup": {
+        "$lookup": { #join
             "from": "exemplar_ref_doc",  
             "localField": "_id",
             "foreignField": "FK_COD",
             "as": "exemplares"
         }
     },
-    {"$match": {"Descrição": "Clássicos Brasileiros"}},  
-    {"$project": {"exemplares": 1, "_id": 0}}
+    {"$match": {"Descrição": "Clássicos Brasileiros"}}, #filter/where
+    {"$project": {"exemplares": 1, "_id": 0}} #select
 ])
 
 print("Cenário 1 : um documento referenciando apenas um documento")
